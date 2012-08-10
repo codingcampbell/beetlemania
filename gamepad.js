@@ -19,11 +19,15 @@
 	}
 
 	function getGamepad(index) {
-		if (typeof window.navigator.webkitGamepads === 'undefined') {
-			throw new Error('Gamepad support not found');
+		if (typeof window.navigator.webkitGamepads !== 'undefined') {
+			return window.navigator.webkitGamepads[index];
 		}
 
-		return window.navigator.webkitGamepads[index];
+		if (typeof window.navigator.webkitGetGamepads === 'function') {
+			return window.navigator.webkitGetGamepads()[index];
+		}
+
+		throw new Error('Gamepad support not found');
 	}
 
 	function probeGamepads() {
