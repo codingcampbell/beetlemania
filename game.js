@@ -131,20 +131,30 @@
 		return function (src, callback) {
 			var sound, request = new window.XMLHttpRequest();
 
+			function startSource(source) {
+				if (!source.start) { // legacy WebAudio API uses noteOn instead
+					 if (source.noteOn) {
+						source.noteOn(0);
+					}
+				} else {
+					source.start(0);
+				}
+			}
+
 			function postLoad() {
 				callback({
 					play: function () {
 						var source = context.createBufferSource();
 						source.buffer = sound;
 						source.connect(soundVolume);
-						source.noteOn(0);
+						startSource(source);
 					},
 					loop: function () {
 						var source = context.createBufferSource();
 						source.loop = true;
 						source.buffer = sound;
 						source.connect(soundVolume);
-						source.noteOn(0);
+						startSource(source);
 					}
 				});
 			}
