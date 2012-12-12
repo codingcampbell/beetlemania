@@ -64,6 +64,11 @@
 
 	function update(time, force) {
 		repaint(update);
+		if (lastUpdate < 0) {
+			lastUpdate = time;
+			return;
+		}
+
 		var delta = time - lastUpdate;
 		if (delta >= 16 || force) { // Cap at 60 FPS
 			lastUpdate = time;
@@ -161,8 +166,8 @@
 	function init() {
 		context = createCanvas(width, height, document.body);
 		game.loadAssets(game.init);
-		lastUpdate = Date.now();
-		update(lastUpdate);
+		lastUpdate = -1;
+		repaint(update);
 	}
 
 	game = (function () {
